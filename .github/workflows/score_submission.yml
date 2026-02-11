@@ -1,0 +1,118 @@
+name: Evaluate Submission
+
+on:
+  pull_request_target:
+    paths:
+      - 'submissions/**'
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout trusted code (main branch)
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # 2️⃣ Fetch PR branch into local ref "pr"
+      - name: Fetch PR branch
+        run: |
+          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr
+
+      # 3️⃣ Validate submission structure
+      - name: Validate submission files
+        run: |
+          echo "Checking files in PR..."
+
+          # Get list of changed files inside submissions/
+          FILES=$(git diff --name-only origin/main...pr | grep '^submissions/' || true)
+
+          echo "Files found:"
+          echo "$FILES"
+
+          EXPECTED1="submissions/submission.csv"
+          EXPECTED2="submissions/metadata.json"
+
+          COUNT=$(echo "$FILES" | wc -l)
+
+          if [ "$COUNT" -ne 2 ]; then
+            echo "❌ PR must contain exactly 2 files inside submissions/"
+            exit 1
+          fi
+
+          if ! echo "$FILES" | grep -qx "$EXPECTED1"; then
+            echo "❌ Missing submissions/submission.csv"
+            exit 1
+          fi
+
+          if ! echo "$FILES" | grep -qx "$EXPECTED2"; then
+            echo "❌ Missing submissions/metadata.json"
+            exit 1
+          fi
+
+          echo "✅ Submission structure valid"
+
+      # 4️⃣ Checkout only the required submission files
+      - name: Checkout submission files
+        run: |
+          git checkout pr -- submissions/submission.csv
+          git checkout pr -- submissions/metadata.json
+
+      # 5️⃣ Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 6️⃣ Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install pandas pyarrow scikit-learn
+
+      # 7️⃣ Clone private labels repo
+      - name: Clone private labels repo
+        env:
+          EVAL_TOKEN: ${{ secrets.EVAL_TOKEN }}
+        run: |
+          git clone https://${EVAL_TOKEN}@github.com/abdksm/PROVEN-GNN-private.git private_labels
+
+      # 8️⃣ Validate submission
+      - name: Validate submission
+        run: |
+          python competition/validate_submission.py
+
+      # 9️⃣ Run scoring
+      - name: Run scoring
+        run: |
+          python competition/evaluate.py \
+            submissions/submission.csv \
+            private_labels/test_labels.csv \
+            score.txt
+          cp score.txt /tmp/score.txt
+
+      # 🔟 Prepare repo for pushing leaderboard update
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # 1️⃣1️⃣ Update leaderboard.csv
+      - name: Update leaderboard.csv
+        run: |
+          git config user.name "challenge-bot"
+          git config user.email "challenge-bot@users.noreply.github.com"
+          git checkout main
+          python update_leaderboard.py \
+            /tmp/score.txt \
+            submissions/submission.csv \
+            "${{ github.event.pull_request.user.login }}"
+
+      # 1️⃣2️⃣ Commit and push leaderboard
+      - name: Commit leaderboard update
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          git add leaderboard.csv
+          git commit -m "Update leaderboard"
+          git push https://${BOT_TOKEN}@github.com/abdksm/PROVEN-GNN.git main

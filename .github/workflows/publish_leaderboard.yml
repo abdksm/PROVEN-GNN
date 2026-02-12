@@ -3,8 +3,8 @@ name: Publish Leaderboard
 on:
   push:
     branches: main
-    # paths:
-    #   - "leaderboard/leaderboard.csv"
+    paths:
+      - "leaderboard/leaderboard.csv"
 
 jobs:
   render:

@@ -108,6 +108,7 @@ jobs:
             /tmp/score.txt \
             submissions/metadata.json \
             "${{ github.event.pull_request.user.login }}"
+          python competition/render_leaderboard.py
 
       # 1️⃣2️⃣ Commit and push leaderboard
       - name: Commit leaderboard update
@@ -116,5 +117,6 @@ jobs:
         run: |
           git restore --staged .
           git add leaderboard/leaderboard.csv
+          git add leaderboard/leaderboard.md
           git commit -m "Update leaderboard"
           git push https://${BOT_TOKEN}@github.com/abdksm/PROVEN-GNN.git main

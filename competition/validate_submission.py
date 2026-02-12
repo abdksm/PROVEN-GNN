@@ -35,7 +35,7 @@ def main(pred_path, test_ids_path, metadata_path):
     if not all(isinstance(v, str) for v in metadata.values()):
         raise ValueError("Some of the provided values are not strings")
     
-    if metadata["type"] not in ["human", "llm", "both"]:
+    if metadata["type"] not in ["human", "llm-only", "human+llm"]:
         raise ValueError("The type should be either human, llm, or both")
 
     print("VALID SUBMISSION")

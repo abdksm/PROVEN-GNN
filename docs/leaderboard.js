@@ -4,19 +4,19 @@
  * - sortable columns
  * - column toggles
  */
-function parseCSV(text){
+function parseCSV(text) {
   const lines = text.trim().split(/\r?\n/);
   const header = lines[0].split(",");
   const rows = [];
-  for(let i=1;i<lines.length;i++){
-    if(!lines[i].trim()) continue;
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
     const cols = [];
     // naive CSV parse with quotes
-    let cur="", inQ=false;
-    for(let j=0;j<lines[i].length;j++){
+    let cur = "", inQ = false;
+    for (let j = 0; j < lines[i].length; j++) {
       const ch = lines[i][j];
-      if(ch === '"'){ inQ = !inQ; continue; }
-      if(ch === "," && !inQ){ cols.push(cur); cur=""; continue; }
+      if (ch === '"') { inQ = !inQ; continue; }
+      if (ch === "," && !inQ) { cols.push(cur); cur = ""; continue; }
       cur += ch;
     }
     cols.push(cur);
@@ -27,22 +27,22 @@ function parseCSV(text){
   return rows;
 }
 
-function daysAgo(dateStr){
+function daysAgo(dateStr) {
   const d = new Date(dateStr);
-  if(isNaN(d.getTime())) return Infinity;
+  if (isNaN(d.getTime())) return Infinity;
   const now = new Date();
-  return (now - d) / (1000*60*60*24);
+  return (now - d) / (1000 * 60 * 60 * 24);
 }
 
 const state = {
   rows: [],
   filtered: [],
-  sortKey: "score",
+  sortKey: "macro_f1",
   sortDir: "desc", // asc|desc
   hiddenCols: new Set(),
 };
 
-function renderTable(){
+function renderTable() {
   const tbody = document.querySelector("#tbl tbody");
   tbody.innerHTML = "";
   const rows = state.filtered;
@@ -54,7 +54,7 @@ function renderTable(){
       ["rank", rank],
       ["team", r.team],
       ["model", r.model],
-      ["score", r.score],
+      ["score", r.macro_f1],
       ["timestamp_utc", r.timestamp_utc],
       ["notes", r.notes || ""],
     ];
@@ -62,9 +62,9 @@ function renderTable(){
       const td = document.createElement("td");
       td.dataset.key = k;
       td.textContent = v;
-      if(k === "rank") td.classList.add("rank");
-      if(k === "score") td.classList.add("score");
-      if(state.hiddenCols.has(k)) td.style.display = "none";
+      if (k === "rank") td.classList.add("rank");
+      if (k === "score") td.classList.add("score");
+      if (state.hiddenCols.has(k)) td.style.display = "none";
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
@@ -80,23 +80,23 @@ function renderTable(){
     rows.length ? `${rows.length} result(s)` : "No results";
 }
 
-function applyFilters(){
+function applyFilters() {
   const q = document.getElementById("search").value.toLowerCase().trim();
   const model = document.getElementById("modelFilter").value;
   const date = document.getElementById("dateFilter").value;
 
   let rows = [...state.rows];
 
-  if(model !== "all"){
+  if (model !== "all") {
     rows = rows.filter(r => (r.model || "").toLowerCase() === model);
   }
 
-  if(date !== "all"){
+  if (date !== "all") {
     const maxDays = (date === "last30") ? 30 : 180;
     rows = rows.filter(r => daysAgo(r.timestamp_utc) <= maxDays);
   }
 
-  if(q){
+  if (q) {
     rows = rows.filter(r => {
       const hay = `${r.team} ${r.model} ${r.notes} ${r.timestamp_utc}`.toLowerCase();
       return hay.includes(q);
@@ -106,19 +106,19 @@ function applyFilters(){
   // Sort
   const k = state.sortKey;
   const dir = state.sortDir === "asc" ? 1 : -1;
-  rows.sort((a,b) => {
+  rows.sort((a, b) => {
     let av = a[k], bv = b[k];
-    if(k === "score"){
+    if (k === "score") {
       av = parseFloat(av); bv = parseFloat(bv);
-      if(isNaN(av)) av = -Infinity;
-      if(isNaN(bv)) bv = -Infinity;
+      if (isNaN(av)) av = -Infinity;
+      if (isNaN(bv)) bv = -Infinity;
       return (av - bv) * dir;
     }
     // default string
     av = (av ?? "").toString().toLowerCase();
     bv = (bv ?? "").toString().toLowerCase();
-    if(av < bv) return -1 * dir;
-    if(av > bv) return  1 * dir;
+    if (av < bv) return -1 * dir;
+    if (av > bv) return 1 * dir;
     return 0;
   });
 
@@ -126,18 +126,18 @@ function applyFilters(){
   renderTable();
 }
 
-function setupColumnToggles(){
+function setupColumnToggles() {
   const cols = [
-    ["rank","Rank"],
-    ["team","Team"],
-    ["model","Model"],
-    ["score","Score"],
-    ["timestamp_utc","Date (UTC)"],
-    ["notes","Notes"],
+    ["rank", "Rank"],
+    ["team", "Team"],
+    ["model", "Model"],
+    ["score", "Score"],
+    ["timestamp_utc", "Date (UTC)"],
+    ["notes", "Notes"],
   ];
   const wrap = document.getElementById("columnToggles");
   wrap.innerHTML = "";
-  cols.forEach(([k,label]) => {
+  cols.forEach(([k, label]) => {
     const id = `col_${k}`;
     const lab = document.createElement("label");
     const cb = document.createElement("input");
@@ -145,7 +145,7 @@ function setupColumnToggles(){
     cb.checked = !state.hiddenCols.has(k);
     cb.id = id;
     cb.addEventListener("change", () => {
-      if(cb.checked) state.hiddenCols.delete(k);
+      if (cb.checked) state.hiddenCols.delete(k);
       else state.hiddenCols.add(k);
       renderTable();
     });
@@ -157,14 +157,14 @@ function setupColumnToggles(){
   });
 }
 
-function setupSorting(){
+function setupSorting() {
   document.querySelectorAll("#tbl thead th").forEach(th => {
     th.addEventListener("click", () => {
       const k = th.dataset.key;
-      if(!k) return;
-      if(state.sortKey === k){
+      if (!k) return;
+      if (state.sortKey === k) {
         state.sortDir = (state.sortDir === "asc") ? "desc" : "asc";
-      }else{
+      } else {
         state.sortKey = k;
         state.sortDir = (k === "score") ? "desc" : "asc";
       }
@@ -173,10 +173,10 @@ function setupSorting(){
   });
 }
 
-async function main(){
+async function main() {
   const status = document.getElementById("status");
-  try{
-    const res = await fetch("../leaderboard/leaderboard.csv", {cache:"no-store"});
+  try {
+    const res = await fetch("../leaderboard/leaderboard.csv", { cache: "no-store" });
     const txt = await res.text();
     const rows = parseCSV(txt);
 
@@ -214,7 +214,7 @@ async function main(){
     state.sortKey = "score";
     state.sortDir = "desc";
     applyFilters();
-  }catch(e){
+  } catch (e) {
     status.textContent = "Failed to load leaderboard.";
     console.error(e);
   }

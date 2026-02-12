@@ -173,8 +173,7 @@ function setupSorting() {
 async function main() {
   const status = document.getElementById("status");
   try {
-    // Relative path used to avoid 404 on GitHub Pages
-    const res = await fetch("leaderboard/leaderboard.csv", { cache: "no-store" });
+    const res = await fetch("../leaderboard/leaderboard.csv", { cache: "no-store" });
     const txt = await res.text();
     const rows = parseCSV(txt);
 

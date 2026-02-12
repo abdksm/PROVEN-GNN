@@ -33,4 +33,4 @@ jobs:
           git config user.email "github-actions@users.noreply.github.com"
           git add leaderboard/leaderboard.md
           git commit -m "Update leaderboard.md"
-          git push https://${BOT_TOKEN}@github.com/abdksm/PROVEN-GNN.git main
+          git push https://x-access-token:${BOT_TOKEN}@github.com/abdksm/PROVEN-GNN.git main

@@ -111,8 +111,10 @@ jobs:
 
       # 1️⃣2️⃣ Commit and push leaderboard
       - name: Commit leaderboard update
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           git restore --staged .
           git add leaderboard/leaderboard.csv
           git commit -m "Update leaderboard"
-          git push
+          git push https://${BOT_TOKEN}@github.com/abdksm/PROVEN-GNN.git main

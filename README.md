@@ -1,4 +1,4 @@
-# 🧠 PROVEN-GNN
+# 🛡️ PROVEN-GNN
 
 ## PROgram Vulnerability Examination Network using Graph Neural Networks
 

@@ -98,7 +98,7 @@ jobs:
             score.txt
           cp score.txt /tmp/score.txt
 
-       # 🔟 Comment Macro F1 on Pull Request
+      # 🔟 Comment Macro F1 on Pull Request
       - name: Comment Macro F1 on PR
         uses: actions/github-script@v7
         with:
@@ -112,7 +112,9 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              body: "✅ Submission Evaluated \n 🏆 **Macro F1 Score:** \`${macroF1}\`"
+              body: `✅ Submission Evaluated
+            🏆 **Macro F1 Score:** \`${macroF1}\``
+            });
 
       # 1️⃣1️⃣ Update leaderboard.csv
       - name: Update leaderboard.csv

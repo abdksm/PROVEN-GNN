@@ -126,10 +126,10 @@ pip install -r starter_code/requirements.txt
 
 ```bash
 cd data/public
+pip install gdown
 
-wget --no-check-certificate "https://drive.google.com/uc?export=download&id=1kUNwo7WjVpJ2D1GPsotiNO5FJnCqt--9" -O train_data.csv
-
-wget --no-check-certificate "https://drive.google.com/uc?export=download&id=1xhg62LTAJm5ityBKiXKv8Rsg0eSl9TJC" -O test_data.csv
+gdown --id 1kUNwo7WjVpJ2D1GPsotiNO5FJnCqt--9 -O train.parquet
+gdown --id 1xhg62LTAJm5ityBKiXKv8Rsg0eSl9TJC -O test.parquet
 ```
 
 ### 4️⃣ Run the Baseline Model

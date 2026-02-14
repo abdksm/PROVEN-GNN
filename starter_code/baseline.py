@@ -110,4 +110,4 @@ with torch.no_grad():
         pred = out.argmax(dim=1)
         test_preds.extend(pred.cpu().numpy())
         
-pd.DataFrame({'id': test['id'], 'y_pred': test_preds}).to_csv('submission.csv', index=False)
+pd.DataFrame({'id': test['id'], 'y_pred': test_preds}).to_csv('predictions.csv', index=False)

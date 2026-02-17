@@ -87,7 +87,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.DECRYPT_KEY }}
         run: |
           # 1. Create the private key file temporarily in extra/
-          cat <<"EOF" > extra/private.pem
+          cat <<EOF > extra/private.pem
           $PRIVATE_KEY
           EOF
           

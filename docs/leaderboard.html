@@ -11,24 +11,26 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>PROVEN-GNN Leaderboard</h1>
-      <p class="sub">Comprehensive evaluation of Graph Neural Networks on proven benchmarks.</p>
+      <div class="title-row">
+        <h1>PROVEN-GNN Leaderboard</h1>
+        <p class="sub">Comprehensive evaluation of Graph Neural Networks on proven benchmarks.</p>
+      </div>
     </header>
 
     <div class="card">
       <div class="controls">
         <div class="control">
-          <label for="search">Search</label>
+          <label>Search</label>
           <input type="search" id="search" placeholder="Search team, model, notes...">
         </div>
         <div class="control">
-          <label for="modelFilter">Model</label>
+          <label>Model</label>
           <select id="modelFilter">
             <option value="all">All</option>
           </select>
         </div>
         <div class="control">
-          <label for="dateFilter">Date</label>
+          <label>Date</label>
           <select id="dateFilter">
             <option value="all">All</option>
             <option value="last30">Last 30 Days</option>
@@ -37,8 +39,7 @@
         </div>
         <div class="control">
           <label>Columns</label>
-          <div id="columnToggles" class="checks">
-          </div>
+          <div id="columnToggles" class="checks"></div>
         </div>
       </div>
 
@@ -46,22 +47,21 @@
         <table id="tbl">
           <thead>
             <tr>
-              <th data-key="rank" data-sort="number">Rank</th>
-              <th data-key="team" data-sort="string">Team</th>
-              <th data-key="type" data-sort="string">Type</th>
-              <th data-key="model" data-sort="string">Model</th>
-              <th data-key="macro_f1" data-sort="number">Macro-F1</th>
-              <th data-key="accuracy" data-sort="number">Accuracy</th>
-              <th data-key="precision" data-sort="number">Precision</th>
-              <th data-key="recall" data-sort="number">Recall</th>
-              <th data-key="timestamp_utc" data-sort="string">Date (UTC)</th>
+              <th data-key="rank">Rank</th>
+              <th data-key="team">Team</th>
+              <th data-key="type">Type</th>
+              <th data-key="model">Model</th>
+              <th data-key="macro_f1">Macro-F1</th>
+              <th data-key="accuracy">Accuracy</th>
+              <th data-key="precision">Precision</th>
+              <th data-key="recall">Recall</th>
+              <th data-key="timestamp_utc">Date (UTC)</th>
             </tr>
           </thead>
-          <tbody>
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
-      <div id="status">Loading results...</div>
+      <div id="status">Loading...</div>
     </div>
   </div>
   <script src="leaderboard.js"></script>

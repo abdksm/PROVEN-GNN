@@ -1,5 +1,7 @@
-/* * Leaderboard UI for PROVEN-GNN
- * Final Fixed Version: Corrects column alignment and data mapping
+/* * Leaderboard Engine for PROVEN-GNN
+ * - Percentage mapping: (value * 100).toFixed(2)
+ * - Dynamic Header/Cell Hiding
+ * - Medal Icons for Top 3
  */
 
 function parseCSV(text) {
@@ -64,7 +66,7 @@ function renderTable() {
       rank = idx + 1;
     }
 
-    // MATCHING YOUR IMAGE ORDER EXACTLY:
+    // Alignment: Rank | Team | Type | Model | Macro-F1 | Accuracy | Precision | Recall | Date
     const cells = [
       ["rank", rank],
       ["team", r.team],
@@ -91,11 +93,11 @@ function renderTable() {
       }
       else if (["macro_f1", "accuracy", "precision", "recall"].includes(k)) {
         const num = parseFloat(v);
-        // If your CSV already has numbers like 71.5, use toFixed(1) + "%"
-        td.textContent = isNaN(num) ? v : num.toFixed(1) + "%";
+        // Multiply by 100 and fix to 2 decimal places as requested
+        td.textContent = isNaN(num) ? v : (num * 100).toFixed(2) + "%";
+        td.style.fontWeight = "600";
       }
       else {
-        // Pulls text directly from CSV for Team, Type, Model, and Date
         td.textContent = v;
       }
 
@@ -104,6 +106,12 @@ function renderTable() {
     });
 
     tbody.appendChild(tr);
+  });
+
+  // PROBLEM FIX: Synchronize Header visibility with Column data
+  document.querySelectorAll("#tbl thead th").forEach(th => {
+    const k = th.dataset.key;
+    th.style.display = state.hiddenCols.has(k) ? "none" : "";
   });
 
   document.getElementById("status").textContent = rows.length + " result(s)";
@@ -123,7 +131,7 @@ function applyFilters() {
   }
   if (q) {
     rows = rows.filter(r =>
-      `${r.team} ${r.model} ${r.type} ${r.notes}`.toLowerCase().includes(q)
+      `${r.team} ${r.model} ${r.type}`.toLowerCase().includes(q)
     );
   }
 
@@ -194,13 +202,17 @@ async function main() {
 
     setupColumnToggles();
     setupSorting();
+
+    // Default initial sort
+    state.sortKey = "macro_f1";
+    state.sortDir = "desc";
     applyFilters();
 
     document.getElementById("search").addEventListener("input", applyFilters);
     document.getElementById("modelFilter").addEventListener("change", applyFilters);
     document.getElementById("dateFilter").addEventListener("change", applyFilters);
   } catch (e) {
-    console.error(e);
+    console.error("Leaderboard load error:", e);
   }
 }
 

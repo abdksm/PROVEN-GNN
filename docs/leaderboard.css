@@ -55,9 +55,18 @@ h1 {
 
 .control label {
   display: block;
-  font-size: 12px;
-  color: var(--muted);
-  margin: 0 0 6px;
+  font-size: 14px;
+  /* Slightly larger */
+  font-weight: 800;
+  /* Extra bold for high visibility */
+  color: #0f172a;
+  /* Near black for maximum contrast on white */
+  margin-bottom: 10px;
+  /* Space between label and the box below */
+  text-transform: uppercase;
+  /* Makes titles look distinct */
+  letter-spacing: 0.5px;
+  /* Clean, professional spacing */
 }
 
 input[type="search"],

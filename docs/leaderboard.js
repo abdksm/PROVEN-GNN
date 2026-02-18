@@ -1,9 +1,3 @@
-/* * Corrected Leaderboard Logic
- * - Fixed column mapping: Rank, Team, Type, Model, Metrics, Date
- * - Two decimal place percentages (num * 100).toFixed(2)
- * - Removed icons from Model/Type fields
- */
-
 function parseCSV(text) {
   const lines = text.trim().split(/\r?\n/);
   if (lines.length < 2) return [];

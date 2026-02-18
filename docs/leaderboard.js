@@ -1,5 +1,7 @@
-/* * Leaderboard Engine for PROVEN-GNN
- * Handles CSV parsing, heatmap rendering, and rank icons
+/* * Corrected Leaderboard Logic
+ * - Fixed column mapping: Rank, Team, Type, Model, Metrics, Date
+ * - Two decimal place percentages (num * 100).toFixed(2)
+ * - Removed icons from Model/Type fields
  */
 
 function parseCSV(text) {
@@ -19,7 +21,7 @@ function parseCSV(text) {
     }
     cols.push(cur);
     const obj = {};
-    header.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
+    header.forEach((h, idx) => obj[h.trim()] = (cols[idx] ?? "").trim());
     rows.push(obj);
   }
   return rows;
@@ -64,16 +66,17 @@ function renderTable() {
       rank = idx + 1;
     }
 
+    // Mapping strictly to the HTML header order
     const cells = [
       ["rank", rank],
+      ["team", r.team],
+      ["type", r.type],
       ["model", r.model],
-      ["type", r.type || "🧠"],
-      ["source", "🔒"], // Placeholder from image
-      ["timestamp_utc", r.timestamp_utc],
       ["macro_f1", r.macro_f1],
       ["accuracy", r.accuracy],
       ["precision", r.precision],
       ["recall", r.recall],
+      ["timestamp_utc", r.timestamp_utc],
     ];
 
     cells.forEach(([k, v]) => {
@@ -89,12 +92,12 @@ function renderTable() {
         td.className = `rank-${v}`;
       }
       else if (["macro_f1", "accuracy", "precision", "recall"].includes(k)) {
-        // Convert 0.456 to 45.6%
         const num = parseFloat(v);
-        td.textContent = isNaN(num) ? v : (num * 100).toFixed(1) + "%";
-        td.style.fontWeight = "600";
+        // Multiply by 100 and fix to 2 decimal places
+        td.textContent = isNaN(num) ? v : (num * 100).toFixed(2) + "%";
       }
       else {
+        // Direct value from CSV (Team, Type, Model, Date) - NO ICONS
         td.textContent = v;
       }
 
@@ -105,6 +108,7 @@ function renderTable() {
     tbody.appendChild(tr);
   });
 
+  // Sync Header Hiding
   document.querySelectorAll("#tbl thead th").forEach(th => {
     const k = th.dataset.key;
     th.style.display = state.hiddenCols.has(k) ? "none" : "";
@@ -126,7 +130,9 @@ function applyFilters() {
     rows = rows.filter(r => daysAgo(r.timestamp_utc) <= limit);
   }
   if (q) {
-    rows = rows.filter(r => `${r.team} ${r.model} ${r.type}`.toLowerCase().includes(q));
+    rows = rows.filter(r =>
+      `${r.team} ${r.model} ${r.type}`.toLowerCase().includes(q)
+    );
   }
 
   const k = state.sortKey;
@@ -147,9 +153,9 @@ function applyFilters() {
 
 function setupColumnToggles() {
   const cols = [
-    ["rank", "Rank"], ["model", "Model"], ["type", "Type"], ["source", "Source"],
-    ["timestamp_utc", "Date"], ["macro_f1", "Overall Acc"],
-    ["accuracy", "Accuracy"], ["precision", "Precision"], ["recall", "Recall"]
+    ["rank", "Rank"], ["team", "Team"], ["type", "Type"], ["model", "Model"],
+    ["macro_f1", "Macro-F1"], ["accuracy", "Accuracy"], ["precision", "Precision"],
+    ["recall", "Recall"], ["timestamp_utc", "Date"]
   ];
   const wrap = document.getElementById("columnToggles");
   wrap.innerHTML = "";
@@ -184,14 +190,9 @@ async function main() {
   try {
     const res = await fetch("/PROVEN-GNN/leaderboard/leaderboard.csv", { cache: "no-store" });
     const txt = await res.text();
-    state.rows = parseCSV(txt).map(r => ({
-      ...r,
-      model: r.model || "Unknown",
-      macro_f1: r.macro_f1 || r.score || "0",
-      type: r.type || "🧠"
-    }));
+    state.rows = parseCSV(txt);
 
-    const modelSet = new Set(state.rows.map(r => r.model));
+    const modelSet = new Set(state.rows.map(r => r.model).filter(Boolean));
     const sel = document.getElementById("modelFilter");
     [...modelSet].sort().forEach(m => {
       const opt = document.createElement("option");
@@ -207,7 +208,7 @@ async function main() {
     document.getElementById("modelFilter").addEventListener("change", applyFilters);
     document.getElementById("dateFilter").addEventListener("change", applyFilters);
   } catch (e) {
-    document.getElementById("status").textContent = "Error loading data.";
+    console.error(e);
   }
 }
 

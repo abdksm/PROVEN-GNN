@@ -86,15 +86,16 @@ jobs:
         env:
           PRIVATE_KEY: ${{ secrets.DECRYPT_KEY }}
         run: |
-          # 1. Create the private key file temporarily in extra/
+          # 1. Create the private key file
           cat <<EOF > extra/private.pem
           $PRIVATE_KEY
           EOF
           
-          # 2. Decrypt the symmetric key from submissions/
-          openssl pkeyutl -decrypt -inkey extra/private.pem -in submissions/secret.key.enc -out extra/key.txt
+          # 2. Decrypt the key and STRIP ALL HIDDEN WINDOWS CHARACTERS
+          # 'tr -d' removes carriage returns (\r) and newlines (\n)
+          openssl pkeyutl -decrypt -inkey extra/private.pem -in submissions/secret.key.enc | tr -d '\r\n ' > extra/key.txt
           
-          # 3. Decrypt the CSV from submissions/
+          # 3. Decrypt the CSV using the cleaned key
           openssl enc -d -aes-256-cbc -in submissions/predictions.csv.enc -out predictions.csv -pass file:extra/key.txt -pbkdf2
           
           # 4. Immediate cleanup

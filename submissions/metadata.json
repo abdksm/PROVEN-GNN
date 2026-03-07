@@ -1,0 +1,7 @@
+{
+  "team": "Tamiru",
+  "run_id": "run_1",
+  "type": "human",
+  "model": "GAT",
+  "notes": "GAT 3-layer 4-head, 128 hidden, mean pool, class weights, early stopping, seed 25"
+}

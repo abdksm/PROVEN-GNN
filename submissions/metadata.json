@@ -1,0 +1,16 @@
+<<<<<<< HEAD
+{
+  "team": "AIkram",
+  "run_id": "run_1",
+  "type": "human",
+  "model": "GAT",
+  "notes": "3-layer GAT with edge features, mean+max pooling, weighted cross entropy for class imbalance"
+=======
+{
+  "team": "AIkram",
+  "run_id": "run_1",
+  "type": "human",
+  "model": "GAT",
+  "notes": "3-layer GAT with edge features, mean+max pooling, weighted cross entropy for class imbalance"
+>>>>>>> b7c7d44e801fb5591f0724bab3d9c13efcf0d15a
+}

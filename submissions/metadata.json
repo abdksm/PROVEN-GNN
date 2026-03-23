@@ -1,0 +1,7 @@
+{
+  "team": "Murad",
+  "run_id": "run_01",
+  "type": "human",
+  "model": "GATv2",
+  "notes": "5-fold CV with dual strategy and threshold tuning"
+}

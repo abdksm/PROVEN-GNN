@@ -1,0 +1,7 @@
+{
+    "team": "hadil",
+    "run_id": "run_1774513606",
+    "type": "human",
+    "model": "GATv2 with GlobalAttention and ClassWeights",
+    "notes": "Improved performance "
+}

@@ -12,9 +12,10 @@
 | 9 | faranbutt | `GCN` | human | 0.833237 | 2026-04-04 22:34:35 UTC |
 | 10 | nourmaj | `GAT` | human | 0.814663 | 2026-04-04 14:49:45 UTC |
 | 11 | Tamiru | `GAT` | human | 0.790873 | 2026-03-07 15:13:02 UTC |
-| 12 | VinitSingroha | `GAT` | human | 0.764679 | 2026-04-04 16:11:27 UTC |
-| 13 | Mubaraq | `Graph Transformer` | human | 0.760764 | 2026-03-23 19:41:24 UTC |
-| 14 | hadil | `GATv2 with GlobalAttention and ClassWeights` | human | 0.751767 | 2026-03-26 08:38:06 UTC |
-| 15 | Peguy | `GCN` | human | 0.747508 | 2026-04-09 07:43:45 UTC |
-| 16 | Tasneem | `GCN` | human | 0.724892 | 2026-04-11 09:32:09 UTC |
-| 17 | Sargam_Goyal | `GAT+GraphSMOTE` | human | 0.435059 | 2026-03-07 16:23:55 UTC |
+| 12 | Qwen2.5-Coder-32B-Instruct | `GATConv` | llm-only | 0.771285 | 2026-05-18 05:40:39 UTC |
+| 13 | VinitSingroha | `GAT` | human | 0.764679 | 2026-04-04 16:11:27 UTC |
+| 14 | Mubaraq | `Graph Transformer` | human | 0.760764 | 2026-03-23 19:41:24 UTC |
+| 15 | hadil | `GATv2 with GlobalAttention and ClassWeights` | human | 0.751767 | 2026-03-26 08:38:06 UTC |
+| 16 | Peguy | `GCN` | human | 0.747508 | 2026-04-09 07:43:45 UTC |
+| 17 | Tasneem | `GCN` | human | 0.724892 | 2026-04-11 09:32:09 UTC |
+| 18 | Sargam_Goyal | `GAT+GraphSMOTE` | human | 0.435059 | 2026-03-07 16:23:55 UTC |

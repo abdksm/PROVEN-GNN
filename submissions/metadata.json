@@ -1,0 +1,7 @@
+{
+  "team": "Qwen2.5-Coder-32B-Instruct",
+  "run_id": "run_2",
+  "type": "llm-only",   // must be "human", "llm-only", or "human+llm"
+  "model": "GATConv",
+  "notes": ""
+}

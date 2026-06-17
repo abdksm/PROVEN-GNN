@@ -1,0 +1,7 @@
+{
+  "team": "Peguy",
+  "run_id": "run_01",
+  "type": "human",
+  "model": "GCN",
+  "notes": "2-layer GCN, hidden_dim=64, dropout=0.3, lr=0.005, weight_decay=5e-4, class-weighted loss, early stopping, seed=25"
+}

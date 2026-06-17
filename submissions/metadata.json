@@ -1,0 +1,7 @@
+{
+  "team": "Muhammad Isah",
+  "run_id": "gat_v2",
+  "type": "human",
+  "model": "GAT",
+  "notes": "3-layer GAT with BatchNorm, residual connections, CosineAnnealingWarmRestarts, gradient clipping. Hidden=256, heads=4, dropout=0.3, lr=1e-3. Best val F1=0.8248. Training time: 15301.3s (~4.25h). Early stop @ epoch 95. Seed 25."
+}
